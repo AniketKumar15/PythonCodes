@@ -1,2 +1,1 @@
-marks["Rohan"] = marks.pop("Aniket")
-# print(marks)
+cnt = cnt + 1

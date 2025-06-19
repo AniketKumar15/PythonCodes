@@ -12,9 +12,13 @@
 # For Loop Ex -
 for i in range(0, 11):
     print(i, end= " ")
-
 print("\n")
 
+for i in range(0, 11):
+    print(i, end= " ")
+else:
+    print("\nHii I am For loop Else Block")
+print("\n")
 
 # While Loop Ex -
 cnt = 0
@@ -30,4 +34,7 @@ while (i <= 5):
     i += 1
 else:
     print("\nElse block executed, i is now:", i)
+
+
+
 

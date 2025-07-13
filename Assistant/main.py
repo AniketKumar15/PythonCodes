@@ -1,0 +1,98 @@
+import speech_recognition as sr
+import webbrowser as wb
+import pyttsx3 as tts
+from googlesearch import search
+
+recognizer = sr.Recognizer()
+
+def speak(text):
+    ttsx = tts.init()
+    voices = ttsx.getProperty('voices')
+    ttsx.setProperty('voice', voices[1].id)
+    ttsx.say(text)
+    ttsx.runAndWait()
+
+def processCommand(command):
+    command = command.lower()
+
+    if "open google" in command or "google" in command:
+        wb.open("https://www.google.com")
+        speak("Opening Google")
+
+    elif "open youtube" in command or "youtube" in command:
+        wb.open("https://www.youtube.com")
+        speak("Opening YouTube")
+
+    elif "open facebook" in command or "facebook" in command:
+        wb.open("https://www.facebook.com")
+        speak("Opening Facebook")
+
+    elif "search" in command:
+        parts = command.split("search", 1)
+        if len(parts) > 1 and parts[1].strip() != "":
+            query = parts[1].strip()
+            speak(f"Searching for {query}")
+            for j in search(query, tld="com", num=1, stop=1, pause=2):
+                wb.open(j)
+                break
+        else:
+            speak("Sorry, I didn't catch what to search for.")
+
+    elif "exit" in command or "stop" in command or "go offline" in command:
+        print("Going offline. Goodbye!")
+        speak("Going offline. Goodbye!")
+        return False
+
+    else:
+        speak("I'm sorry, I didn't understand that.")
+        print("Command not recognized, please try again.")
+
+    return True
+
+if __name__ == "__main__":
+    print("Initializing Friday....")
+    speak("Initializing Friday....")
+
+    while True:
+        try:
+            with sr.Microphone() as source:
+                print("Say 'Friday' to activate...")
+                audio_text = recognizer.listen(source, timeout=5)
+                activation = recognizer.recognize_google(audio_text).lower()
+                print("You said:", activation)
+
+                if "friday" in activation:
+                    speak("Voice matched. Activating Friday.")
+                    print("Voice matched. Activating Friday.")
+
+                    # Active listening loop
+                    while True:
+                        try:
+                            with sr.Microphone() as source:
+                                print("Listening for your command... (say 'exit' to quit)")
+                                audio_text = recognizer.listen(source, timeout=5)
+                                command = recognizer.recognize_google(audio_text)
+                                print("Command:", command)
+
+                                if not processCommand(command):
+                                    break  # exit command loop
+                        except sr.WaitTimeoutError:
+                            print("Timeout: No speech detected. Still waiting...")
+                            continue
+                        except sr.UnknownValueError:
+                            print("Sorry, I couldn't understand. Please try again.")
+                            speak("Sorry, I couldn't understand. Please try again.")
+                        except Exception as e:
+                            print(f"Error: {e}")
+                            speak("An error occurred. Please try again.")
+                            break
+
+                else:
+                    print("Voice not matched. Say 'Friday' to activate.")
+                    speak("Voice not matched. Please say Friday to activate.")
+        except sr.WaitTimeoutError:
+            print("Timeout waiting for 'Friday' activation. Restarting...")
+            continue
+        except Exception as e:
+            print(f"Error: {e}")
+            speak("Something went wrong.")

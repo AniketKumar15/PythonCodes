@@ -1,9 +1,22 @@
+from urllib import response
 import speech_recognition as sr
 import webbrowser as wb
 import pyttsx3 as tts
 from googlesearch import search
+from datetime import datetime
+from dotenv import load_dotenv
+import google.generativeai as genai
+from textwrap import wrap
+import os
+
 
 recognizer = sr.Recognizer()
+
+
+load_dotenv()
+API_KEY = os.getenv("API_KEY")
+genai.configure(api_key=API_KEY)
+model = genai.GenerativeModel("gemini-1.5-flash-latest")
 
 def speak(text):
     ttsx = tts.init()
@@ -27,6 +40,11 @@ def processCommand(command):
         wb.open("https://www.facebook.com")
         speak("Opening Facebook")
 
+    elif "current time" in command or "time" in command:
+        current_time = datetime.now().strftime("%I:%M %p")
+        print(f"The current time is {current_time}")
+        speak(f"The current time is {current_time}")
+
     elif "search" in command:
         parts = command.split("search", 1)
         if len(parts) > 1 and parts[1].strip() != "":
@@ -39,14 +57,23 @@ def processCommand(command):
             speak("Sorry, I didn't catch what to search for.")
 
     elif "exit" in command or "stop" in command or "go offline" in command:
+        
         print("Going offline. Goodbye!")
         speak("Going offline. Goodbye!")
         return False
 
     else:
-        speak("I'm sorry, I didn't understand that.")
-        print("Command not recognized, please try again.")
+        speak("AI Mode On")
+        try:
+            response = model.generate_content(command)
+            print("Gemini Response:", response.text)
 
+            # Speak only the first 2 lines or ~300 characters
+            short_response = "\n".join(wrap(response.text, 100))[:300]
+            speak(short_response)
+        except Exception as e:
+            print(f"Error generating response: {e}")
+            speak("Sorry, I couldn't process that command. Please try again.")
     return True
 
 if __name__ == "__main__":
@@ -94,5 +121,5 @@ if __name__ == "__main__":
             print("Timeout waiting for 'Friday' activation. Restarting...")
             continue
         except Exception as e:
-            print(f"Error: {e}")
+            print("Something went wrong.")
             speak("Something went wrong.")

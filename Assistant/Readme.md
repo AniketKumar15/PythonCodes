@@ -76,8 +76,4 @@ Friday is a voice-controlled AI assistant built using Python. It responds to spo
 ## 🙋‍♂️ Author
 - **Aniket Kumar**
 - **Game Developer turned Python Explorer**
-- **GitHub: @AniketKumar15**
-
-yaml
-Copy
-Edit
+- **GitHub: [@AniketKumar15](https://github.com/AniketKumar15)**

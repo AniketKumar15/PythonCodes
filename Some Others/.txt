@@ -1,0 +1,73 @@
+def messageToNumber(message):
+    message = message.upper()
+    message_num = []
+    symbol_map = {
+        '.': 38,
+        ',': 39,
+        '!': 40,
+        '?': 41
+    }
+    for char in message:
+        if char.isalpha():  # A–Z -> 01–26
+            message_num.append(ord(char) - ord('A') + 1)
+        elif char.isdigit():  # 0–9 -> 27–36
+            message_num.append(ord(char) - ord('0') + 27)
+        elif char == " ":  # space
+            message_num.append(37)
+        elif char in symbol_map:  # punctuation
+            message_num.append(symbol_map[char])
+        else:  # fallback for anything else
+            message_num.append(0)
+
+    return message_num
+
+# Function to convert numbers back to message
+def numberToMessage(numbers):
+    reverse_map = {
+        37: " ",
+        38: ".",
+        39: ",",
+        40: "!",
+        41: "?"
+    }
+    message = ""
+    for num in numbers:
+        if 1 <= num <= 26:  # A–Z
+            message += chr(num + ord('A') - 1)
+        elif 27 <= num <= 36:  # 0–9
+            message += chr(num - 27 + ord('0'))
+        elif num in reverse_map:
+            message += reverse_map[num]
+        else:
+            message += "?"
+    return message
+
+def message_to_number_full(message):
+    # Convert each character to ASCII and format as 3 digits
+    message_num_str = ''.join([f"{ord(c):03}" for c in message])
+    # Convert the string to an integer
+    return int(message_num_str)
+
+def number_to_message_full(number):
+    # Convert the integer back to string
+    num_str = str(number)
+    message = ""
+    # Take 3 digits at a time
+    for i in range(0, len(num_str), 3):
+        ascii_code = int(num_str[i:i+3])
+        message += chr(ascii_code)
+    return message
+
+
+Enter First prime number (p): 61 
+Enter Second prime number (q): 53 
+Chosen e: 7 
+Computed d: 1783 
+Computed n: 3233 
+Public Key (e, n): (7, 3233) 
+Private Key (d, n): (1783, 3233) 
+Enter the message to be encrypted: Hello 
+Numeric representation of the message: 72101108108111 
+Encrypted message: 803 
+Decrypted numeric message: 518 
+Decrypted message: Ȇ

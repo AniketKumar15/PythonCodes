@@ -1,4 +1,4 @@
-from urllib import response
+# ALL IMPORTS STATEMENT
 import speech_recognition as sr
 import webbrowser as wb
 import pyttsx3 as tts
@@ -9,15 +9,16 @@ import google.generativeai as genai
 from textwrap import wrap
 import os
 
-
+# Initialize the text-to-speech engine
 recognizer = sr.Recognizer()
 
-
+# Load environment variables and configure the Generative AI model
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
 genai.configure(api_key=API_KEY)
 model = genai.GenerativeModel("gemini-1.5-flash-latest")
 
+# Function to speak text using the text-to-speech engine
 def speak(text):
     ttsx = tts.init()
     voices = ttsx.getProperty('voices')
@@ -25,6 +26,7 @@ def speak(text):
     ttsx.say(text)
     ttsx.runAndWait()
 
+# Function to process commands
 def processCommand(command):
     command = command.lower()
 
